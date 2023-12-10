@@ -42,7 +42,19 @@ export const handleGGLogin = async (req,res) =>{
        
     }
 }
+export const blackHandleGGLogin = async (email) =>{
+    let userData= {};
+    console.log(email);
+        if(await checkExist(email, 'email'))
+        {
+            let userData = await handleUserLogin(email);
+            return userData;
+            
+        } else {
+            return userData = "[{}]";
+        }
 
+}
 //register
 export const handleRegister = async (req, res) =>{
     let fullName = req.body.fullName;

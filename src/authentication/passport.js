@@ -1,6 +1,9 @@
 import gStrategy from "passport-google-oauth20";
 const GoogleStrategy = gStrategy.Strategy;
 import passport from "passport";
+import {
+	blackHandleGGLogin
+} from "../controllers/customers/userController.js"
 passport.use(
 	new GoogleStrategy(
 		{
@@ -9,8 +12,11 @@ passport.use(
 			callbackURL: "/auth/google/callback",
 			scope: ["profile", "email"],
 		},
-		function (accessToken, refreshToken, profile, done) {
-			let userProfile = profile;
+		async function (accessToken, refreshToken, profile, done) {
+			let idGG = profile.emails[0].value;
+			console.log(idGG);
+			let userProfile = await blackHandleGGLogin(idGG);
+			console.log(userProfile);
 			return done(null, userProfile);
 			// callback(null, profile);
 		}
