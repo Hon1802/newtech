@@ -14,6 +14,7 @@ import fs from 'fs'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import multer from "multer";
+import validator from 'validator';
 //login google
 export const handleGGLogin = async (req,res) =>{
     if (req.user) {
@@ -42,17 +43,30 @@ export const handleGGLogin = async (req,res) =>{
        
     }
 }
-export const blackHandleGGLogin = async (email) =>{
-    let userData= {};
-    console.log(email);
-        if(await checkExist(email, 'email'))
-        {
-            let userData = await handleUserLogin(email);
-            return userData;
-            
-        } else {
-            return userData = "[{}]";
-        }
+export const blackHandleGGLogin = async (req, res) =>{
+    let email = req.body.email;
+    if(!validator.isEmail(email))
+    {
+        return res.status(400).json({
+            errCode: '1',
+            message: 'invalid input value'
+        }) 
+    }
+    if(await checkExist(email, 'email'))
+    {
+        let userData = await handleUserLogin(email);
+        return res.status(userData.status).json({
+            errCode: userData.errCode,
+            message: userData.errMessage,
+            userData
+        }) 
+    } else {
+        return res.status(400).json({
+            errCode: '1',
+            message: 'no user'
+        }) 
+        return userData = "[{}]";
+    }
 
 }
 //register

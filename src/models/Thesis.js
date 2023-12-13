@@ -2,33 +2,72 @@ import mongoose, { Schema } from "mongoose";
 import { ObjectId } from "bson";
 export default mongoose.model('Thesis',
     new Schema({
-        id:{type: ObjectId},
-    name:{
+    id:{type: ObjectId},
+    title:{
         type: String,
         required: true,
     },
-    category:{
+    code:{
         type: String,
         required: true,
     },
-    instructorId:{
-        type: String,
+    industry:{
+        type : String,
         required: true,
     },
     description:{
         type: String,
+        require: true
+    },
+    academic_year:{
+        type: String,
         required: true,
     },
-    status:{
+    time_start:{
+        type: Date,
+        required: true,
+    },
+    time_end:{
+        type: Date,
+        required: true,
+    },
+    author:[{
+        id: String,
+        name: String,
+        class: String,
+        major: String
+    }],
+    member:[{ 
+        id: String,
+        name: String,
+        class: String,
+        major: String
+    }],
+    instructor:[{ 
+        id: String,
+        name: String,
+        faculty: String
+    }],
+    type:{
         type:String,
         required: true,
     },
-    progress:{
+    result:{
+        type:String,
+    },
+    reference:[{ 
+        reference : String,
+    }],
+    urlSave:[{ 
+        type: String,
+    }],
+    status:{
         type: Number,
-        required:true,
-    }
-    },{
+        required: true,
+    }}
+    ,{
         autoCreate: false,
         autoIndex: true
     })
 )
+// urlSave save url report
