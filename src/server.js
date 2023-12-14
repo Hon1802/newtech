@@ -21,7 +21,7 @@ let app = express();
 // environment
 import { port, mongoURL} from "./config/main.js";
 //check token
-// app.use(checkToken)
+app.use(checkToken)
 //gg session
 //
 app.use(
@@ -59,7 +59,7 @@ initWebRoutes(app);
 // if(true)
 // {
 // //     uploadThesis();
-// //     upload();
+//     upload();
 //     console.log('upload success');
 // }
 app.listen(port, () =>{

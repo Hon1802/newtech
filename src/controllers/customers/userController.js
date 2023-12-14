@@ -70,28 +70,6 @@ export const blackHandleGGLogin = async (req, res) =>{
     }
 
 }
-//register
-export const handleRegister = async (req, res) =>{
-    let fullName = req.body.fullName;
-    let address = req.body.address;
-    let email = req.body.email;
-    let password = req.body.password;
-    let phone = req.body.phone;
-    let gender = req.body.gender;
-    if (!email || !password){
-        return res.status(400).json({
-            errCode: 1,
-            message:"Missing inputs value"
-        }) 
-    }
-    let userData = await handleUserRegister(fullName, address, email,password, phone, gender);
-
-    return res.status(userData.status).json({
-        errCode: userData.errCode,
-        message: userData.errMessage,
-        userData
-    }) 
-}
 //logout
 export const handleLogOut = async (req, res) =>{
     let userId = req.body.id;
@@ -186,11 +164,26 @@ export const getUserById = async (req, res) => {
 export const updateInfoById = async (req, res) => {
     try {
         let userId = req.body.id;
-        let nameUser = req.body.nameUser;
-        let address = req.body.address;
+        let idUser = req.body.idStudent;
+        let email = req.body.email;
+        let fullName = req.body.fullName;
+        let dob = req.body.dob;
         let phone = req.body.phone;
+        let major = req.body.major;
+        let stClass = req.body.stClass;
+        let facility = req.body.facility;
         let gender = req.body.gender;
-        let userData = await updateById(userId, nameUser, address, phone, gender);
+        let userData = await updateById(
+                            userId, 
+                            idUser,
+                            fullName, 
+                            dob, 
+                            email,
+                            phone,
+                            major,
+                            stClass,
+                            facility,
+                            gender);
         return res.status(userData.status).json({
             errCode: userData.errCode,
             message: userData.message,

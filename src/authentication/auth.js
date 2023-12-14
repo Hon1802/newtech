@@ -8,16 +8,7 @@ export default async function checkToken(req, res, next) {
     if(req.url.toLowerCase().trim() == '/api/login'.toLowerCase().trim() 
         || req.url.toLowerCase().trim() =='/api/register'.toLowerCase().trim()
         || req.url.toLowerCase().trim() =='/api/logout'.toLowerCase().trim()
-        || req.url.toLowerCase().trim() =='/'.toLowerCase().trim()
-        || req.url.toLowerCase().trim() =='/api/filter-tour'.toLowerCase().trim()
-        || req.url.toLowerCase().trim() =='/api/get-all-tours'.toLowerCase().trim()
-        || req.url.toLowerCase().trim() =='/api/get-tour-by-id'.toLowerCase().trim()
-        || req.url.toLowerCase().trim() =='/api/latest-tour'.toLowerCase().trim()
-        || req.url.toLowerCase().trim() =='/api/hot-tour'.toLowerCase().trim()
-        || req.url.toLowerCase().trim() =='/auth/login/success'.toLowerCase().trim()
-        || req.url.toLowerCase().trim() =='/auth/login/failed'.toLowerCase().trim()
-        || req.url.toLowerCase().trim() =='/auth/google/callback'.toLowerCase().trim()
-        || req.url.toLowerCase().trim() =='/auth/logout'.toLowerCase().trim()
+        || req.url.toLowerCase().trim() == '/auth/login'.toLowerCase().trim() 
         
     ){
         next()

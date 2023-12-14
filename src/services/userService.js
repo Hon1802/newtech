@@ -211,16 +211,32 @@ export const getById = (userId) =>{
     })
 };
 //update by id
-export const updateById = (userId, name, address, phone, gender) =>{
+export const updateById = (userId, 
+                            idUser,
+                            fullName, 
+                            dob, 
+                            email,
+                            phone,
+                            major,
+                            role,
+                            stClass,
+                            facility,
+                            gender ) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let userData = {};
             const user = await User.updateOne(
                 { _id: userId }, // Filter: Find the user with the given id
                 { $set: { 
-                    name : name,
-                    address: address,
+                    idUser: idUser,
+                    name : fullName,
+                    dob: dob, 
+                    email: email,
                     phoneNumber: phone,
+                    major: major,
+                    role: role,
+                    stClass: stClass,
+                    facility: facility,
                     gender: gender
                  } } // Update: Set the urlAvatar field to the new path
               );
