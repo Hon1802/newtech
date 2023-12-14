@@ -5,6 +5,7 @@ import {
     getById,
     updateById,
     changeStatusUser,
+    handleUserLogOut
 } from "../../services/userService.js" ;
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -89,6 +90,23 @@ export const handleRegister = async (req, res) =>{
         errCode: userData.errCode,
         message: userData.errMessage,
         userData
+    }) 
+}
+//logout
+export const handleLogOut = async (req, res) =>{
+    let userId = req.body.id;
+    console.log('ee')
+    if (!userId){
+        return res.status(400).json({
+            errCode: 1,
+            message:"Missing inputs value"
+        }) 
+    }
+    let userData = await handleUserLogOut(userId);
+    return res.status(userData.status).json({
+        errCode: userData.errCode,
+        message: userData.errMessage,
+        // yourEmail: email
     }) 
 }
 //update avatar

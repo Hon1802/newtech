@@ -3,6 +3,7 @@ import express from "express";
 import {    getHomePage    } from "../controllers/homeController.js";
 import { 
          handleRegister,
+         handleLogOut,
          updateAvatar,
          getUserById,
          updateInfoById,
@@ -29,6 +30,7 @@ let initWebRoutes = (app)=>{
     //user
     // auth
     router.post('/auth/login', blackHandleGGLogin);
+    router.post('/api/logout', handleLogOut);
     // 
     router.post('/api/register', handleRegister );
     router.post('/api/upload-avatar', updateAvatar);
