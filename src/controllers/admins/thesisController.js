@@ -4,13 +4,19 @@ import path from 'path';
 import fs from 'fs'
 import {
     handleAddThesis,
-    handleGetAllThesisNotCompleted
+    handleGetAllThesisNotCompleted,
+    getThesisById,
+    addMember,
+    addSequence
 } from "../../services/thesisService.js"
 import {
     handleAddReference,
     handleGetAllReference,
     getById
 } from "../../services/referenceService.js"
+import {
+    getInformation,
+} from "../customers/userController.js"
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import multer from "multer";
@@ -62,32 +68,16 @@ export const handleAddNewThesis = async(req, res) =>{
         let academic_year = req.body.academic_year;
         let time_start = req.body.time_start;
         let time_end = req.body.time_end;
-        let author = req.body.author;
-        if(author)
-        { 
-            author = JSON.parse(author); 
-        }  
-        let member = req.body.member;
-        if(member)
-        { 
-            member = JSON.parse(member);
-        } 
         let instructor = req.body.instructor; 
         if(instructor)
         {
             instructor = JSON.parse(instructor);
         }
         let type = req.body.type;
-        let result = req.body.result;
-        let reference = req.body.reference;
-        if(reference)
-        { 
-            reference = JSON.parse(reference); 
-        }  
         let status = req.body.status; 
         if (!title || !description ||  
             !industry || !academic_year || 
-            !time_start || !time_end || !author || !instructor || !type){
+            !time_start || !time_end || !type || !instructor){
             return res.status(400).json({
                 errCode: 1,
                 message:"Missing inputs value"
@@ -106,14 +96,10 @@ export const handleAddNewThesis = async(req, res) =>{
                                             academic_year,
                                             time_start,
                                             time_end,
-                                            author,
-                                            member,
                                             instructor,
                                             type,
-                                            result,
-                                            reference,
                                             status);
-
+ 
             return res.status(thesisData.status).json({
                 errCode: thesisData.errCode,
                 message: thesisData.errMessage,
@@ -207,6 +193,50 @@ export const getReference = async(req, res) =>{
         }) 
     }
 }
+// register Thesis
+export const registerThesis = async(req, res) =>{
+    try {
+        let idThesis = req.body.idThesis;
+        let idMember = req.body.idMember || '000000';
+        let member = await getInformation(idMember);
+        if(idThesis)
+        {
+            let dataThesis = await getThesisInformation(idThesis);
+            // dataThesis.data.N_member = 1;
+            if(dataThesis.data.N_member === 0)
+            {
+                let thesisData = await addMember(idThesis, member);
+                return res.status(200).json({
+                    errCode: 0,
+                    message: 'Success',
+                }) 
+            } 
+            if(dataThesis.data.N_member === 1)
+            {
+                let thesisData = await addSequence(idThesis, member);
+                return res.status(thesisData.status).json({
+                    errCode: thesisData.errCode,
+                    message: thesisData.errMessage,
+                }) 
+            } 
+            if(dataThesis.data.N_member === 2)
+            {
+                return res.status(200).json({
+                    errCode: 0,
+                    message: 'Please register another topic',
+                }) 
+            } 
+        }
+       
+        
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
 // read pdf
 export const readPdf = async(req, res) =>{
     try {
@@ -257,5 +287,17 @@ export const example = async(req, res) =>{
             errCode: 1,
             message: 'Not found',
         }) 
+    }
+}
+
+// get user by user id
+export const getThesisInformation = async (thesisId) => {
+    try{
+        let thesisData = await getThesisById(thesisId);    
+        return thesisData;
+    } catch(e)
+    {
+        let modifiedData =[];   
+        return modifiedData;
     }
 }

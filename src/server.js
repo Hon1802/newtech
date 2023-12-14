@@ -58,8 +58,8 @@ initWebRoutes(app);
 // authRoute(app); 
 // if(true)
 // {
-// //     uploadThesis();
-//     upload();
+//     uploadThesis();
+//     // upload();
 //     console.log('upload success');
 // }
 app.listen(port, () =>{

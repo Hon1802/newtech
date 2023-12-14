@@ -3,6 +3,7 @@ import {
     uploadAvatar, 
     checkExist,
     getById,
+    getByUserId,
     updateById,
     changeStatusUser,
     handleUserLogOut
@@ -160,6 +161,38 @@ export const getUserById = async (req, res) => {
         }) 
     }
 }
+// get user by user id
+export const getUserByUserId = async (req, res) => {
+    try{
+        let userId = req.body.id;
+            let userData = await  getByUserId(userId);    
+            let modifiedData =[];   
+            if(userData)
+            {
+                userData = {
+                    ...userData.data
+                };
+                modifiedData.push({
+                    idUser : userData.idUser,
+                    name : userData.name,
+                    class : userData.stClass,
+                    major : userData.major
+                })
+                userData.status = 200;
+            }
+            return res.status(userData.status).json({
+                errCode: userData.errCode,
+                message: userData.message,
+                modifiedData
+            });
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
 // update information by id
 export const updateInfoById = async (req, res) => {
     try {
@@ -250,3 +283,36 @@ const storage = multer.diskStorage({
   });
 export const upload = multer({ storage });
 
+// get user by user id
+export const getInformation = async (userId) => {
+    try{
+        let userData = await  getById(userId);    
+        let modifiedData =[];   
+        if(userData)
+        {
+            userData = {
+                ...userData.data
+            };
+            modifiedData.push({
+                idUser : userData.idUser || 'none',
+                name : userData.name || "none", 
+                class : userData.stClass || "none",
+                major : userData.major || "none",
+                facility: userData.facility || "none"
+            })
+            
+        }
+        return modifiedData;
+    } catch(e)
+    {
+        let modifiedData =[];   
+        modifiedData.push({
+            idUser : '00000000',
+            name : 'no name',
+            class : 'no class',
+            major : 'no major',
+            facility : 'no facility'
+
+        })
+    }
+}

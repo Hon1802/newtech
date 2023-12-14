@@ -1,4 +1,4 @@
-import { handleAddThesis
+import { handleAddThesisData
 } from "../src/services/thesisService.js";
 import XLSX from 'xlsx';
 import path from 'path';
@@ -70,12 +70,15 @@ export const uploadThesis = async() => {
             let member_1 = row.member_1;
             let member_2 = row.member_2;
             let member_3 = row.member_3;
+            let n_member = 1;
             let member = member_1;
             if(member_2){
+                n_member ++;
                 member = member + ','+member_2;
             }
             if(member_3)
             {
+                n_member ++;
                 member = member + ','+member_3;
             }
             if(member)
@@ -99,14 +102,14 @@ export const uploadThesis = async() => {
                 reference = JSON.parse(reference); 
             }  
             // console.log(convertDate(time_end));
-            handleAddThesis(title,
+            handleAddThesisData(title,
                             code,
                             industry,
                             description,
                             academic_year,
                             time_start,
                             time_end,
-                            author,
+                            n_member,
                             member,
                             instructor,
                             type,

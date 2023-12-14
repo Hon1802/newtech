@@ -210,6 +210,38 @@ export const getById = (userId) =>{
         }
     })
 };
+//get by id
+export const getByUserId = (userId) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            
+            let userData = {};
+            let isExist = await User.findOne({ idUser: userId }).exec()        
+            if(isExist)
+            {   
+                userData.errCode = 2;
+                userData.errMessage ='Get user by id success';
+                userData.data = {
+                    ...isExist.toObject(),
+                    password:'Not show'    
+                };
+                userData.status = 200;
+                resolve(userData)
+            }else{
+                userData.status = 400;
+                userData.errCode = 3;
+                userData.errMessage ='Error connect'
+                resolve(userData) 
+            }
+        }catch(e){
+            let userData = {};
+            userData.status = 400;
+            userData.errCode = 3;
+            userData.errMessage ='Your account was not created'         
+            rejects(userData)
+        }
+    })
+};
 //update by id
 export const updateById = (userId, 
                             idUser,
@@ -218,7 +250,6 @@ export const updateById = (userId,
                             email,
                             phone,
                             major,
-                            role,
                             stClass,
                             facility,
                             gender ) =>{
@@ -234,7 +265,6 @@ export const updateById = (userId,
                     email: email,
                     phoneNumber: phone,
                     major: major,
-                    role: role,
                     stClass: stClass,
                     facility: facility,
                     gender: gender

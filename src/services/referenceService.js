@@ -111,8 +111,7 @@ export const getById = (fileId) =>{
                 pdfData.errCode = 0;
                 pdfData.errMessage ='Get pdf by id success';
                 pdfData.data = {
-                    ...isExist.toObject(),
-                    password:'Not show'    
+                    ...isExist.toObject(),  
                 };
                 pdfData.status = 200;
                 resolve(pdfData)
@@ -123,8 +122,7 @@ export const getById = (fileId) =>{
                     pdfData.errCode = 0;
                     pdfData.errMessage ='Get pdf by id success';
                     pdfData.data = {
-                        ...isExist.toObject(),
-                        password:'Not show'    
+                        ...isExist.toObject(), 
                     };
                     pdfData.status = 200;
                     resolve(pdfData)

@@ -5,6 +5,7 @@ import {
          handleLogOut,
          updateAvatar,
          getUserById,
+         getUserByUserId,
          updateInfoById,
          deleteUserById,
          blackHandleGGLogin
@@ -15,7 +16,8 @@ import {
     uploadReference,
     getReference,
     readPdf,
-    getAllThesisNotCompleted
+    getAllThesisNotCompleted,
+    registerThesis
     } 
    from "../controllers/admins/thesisController.js" ;
 let router = express.Router();
@@ -33,9 +35,14 @@ let initWebRoutes = (app)=>{
     router.post('/api/logout', handleLogOut);
     // 
     router.post('/api/upload-avatar', updateAvatar);
-    router.post('/api/personal', getUserById);
     router.post('/api/update-by-id', updateInfoById);
+    // by id in db
+    router.post('/api/personal', getUserById);
+    // by id user, "20110000"
+    router.post('/api/get-by-user-id', getUserByUserId);
     router.post('/api/delete-account', deleteUserById);
+    // register thesis
+    router.post('/api/register-thesis', registerThesis);
 // thesis
     router.post('/api/upload-thesis', handleAddNewThesis);
     router.post('/api/upload-reference', uploadReference);

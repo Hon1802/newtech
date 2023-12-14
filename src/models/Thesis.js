@@ -31,12 +31,9 @@ export default mongoose.model('Thesis',
         type: Date,
         required: true,
     },
-    author:[{
-        id: String,
-        name: String,
-        class: String,
-        major: String
-    }],
+    N_member:{
+        type: Number
+    },
     member:[{ 
         id: String,
         name: String,
