@@ -14,7 +14,8 @@ import {
     handleAddNewThesis,
     uploadReference,
     getReference,
-    readPdf
+    readPdf,
+    getAllThesisNotCompleted
     } 
    from "../controllers/admins/thesisController.js" ;
 let router = express.Router();
@@ -39,6 +40,7 @@ let initWebRoutes = (app)=>{
     router.post('/api/upload-thesis', handleAddNewThesis);
     router.post('/api/upload-reference', uploadReference);
     router.post('/api/get-reference', getReference);
+    router.post('/api/get-all-thesis', getAllThesisNotCompleted);
     router.post('/api/read-pdf', readPdf);
     return app.use("/", router); 
 }

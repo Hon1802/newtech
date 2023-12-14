@@ -61,6 +61,7 @@ export default mongoose.model('Thesis',
     urlSave:[{ 
         type: String,
     }],
+    // status: =-1 cancel, = 0 completed, = 1 register, =2 not register
     status:{
         type: Number,
         required: true,
@@ -70,4 +71,5 @@ export default mongoose.model('Thesis',
         autoIndex: true
     })
 )
+// 
 // urlSave save url report

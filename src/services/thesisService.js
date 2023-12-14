@@ -70,3 +70,54 @@ export const handleAddThesis = (
         }
     })
 };
+
+// get all reference
+export const handleGetAllThesisNotCompleted = (title, 
+                                                industry, 
+                                                academic_year, 
+                                                type, status) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let referenceData = {};
+            let queryThesis = Thesis.find();  
+            const filterConditions = {
+                title: title && { $regex: new RegExp(title, 'i') },
+                industry: industry && { $regex: new RegExp(industry, 'i') },
+                academic_year: academic_year && { $regex: new RegExp(academic_year, 'i') },
+                type: type && { $regex: new RegExp(type, 'i') }
+              };
+                       
+            Object.keys(filterConditions).forEach(key => {
+                if (filterConditions[key]) {
+                    queryThesis = queryThesis.where(key, filterConditions[key]);
+                }
+            });
+            let resultThesis = await queryThesis.exec();
+            let resultsThesisArray = Array.isArray(resultThesis) ? resultThesis : [resultThesis];
+            let transformedResultsThe = resultsThesisArray.map(item => item.toObject());
+            let thesisResult = transformedResultsThe.filter(thesis => {
+                return (thesis.status == status);
+            });  
+            const combinedResult = thesisResult;
+            if(combinedResult)
+            {   
+                referenceData.status = 200;
+                referenceData.errCode = 0;
+                referenceData.errMessage ='Get thesis success';
+                referenceData.data = combinedResult;
+                resolve(referenceData)
+            }else{
+                referenceData.status = 400;
+                referenceData.errCode = 3;
+                referenceData.errMessage ='Error connect'
+                resolve(referenceData) 
+            }
+        }catch(e){
+            let referenceData = {};
+            referenceData.status = 400;
+            referenceData.errCode = 3;
+            referenceData.errMessage ='No data'             
+            resolve(referenceData)
+        }
+    })
+};

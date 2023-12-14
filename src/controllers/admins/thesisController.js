@@ -3,7 +3,8 @@ import { dirname } from 'path';
 import path from 'path';
 import fs from 'fs'
 import {
-    handleAddThesis
+    handleAddThesis,
+    handleGetAllThesisNotCompleted
 } from "../../services/thesisService.js"
 import {
     handleAddReference,
@@ -13,6 +14,43 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import multer from "multer";
+
+// get all thesis
+// get all reference
+export const getAllThesisNotCompleted = async(req, res) =>{
+    try {
+        let title = req.body.title ;
+        let industry = req.body.industry ;
+        let academic_year = req.body.academic_year ;
+        let type = req.body.type ;     
+        let status = req.body.status;   
+        if(!status)
+        {
+            status = 1;
+        }
+        let referenceData = await handleGetAllThesisNotCompleted(
+                                                        title,
+                                                        industry,
+                                                        academic_year,
+                                                        type,
+                                                        status);
+        let tempImagePaths = 'src/public/default/pdf.png';
+        referenceData.image = fs.readFileSync(tempImagePaths, {encoding: 'base64'});
+        
+        return res.status(referenceData.status).json({
+            errCode: referenceData.errCode,
+            message: referenceData.message,
+            referenceData
+        }) 
+        
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
 
 // add new thesis
 export const handleAddNewThesis = async(req, res) =>{
