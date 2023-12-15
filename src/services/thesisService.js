@@ -227,9 +227,12 @@ export const addMember = (thesisId, member) =>{
             {
                 const thesis = await Thesis.updateOne(
                     { _id: thesisId, "member.name": { $ne: member[0].name }}, 
-                    { $push: { 
-                        member: member,
-                     } }
+                    {   
+                        $inc: { N_member: 1 },
+                        $push:
+                        { 
+                            member: member,
+                        } }
                   );
                 if (thesis.nModified === 0) {
                 // If no user was modified, it means the user with the given id was not found
@@ -250,7 +253,7 @@ export const addSequence = (thesisId, member) =>{
             let pdfData = {};
             const thesisCheck = await Register.findOne({ idThesis: thesisId});
             if(thesisCheck){
-                console.log('not ok');
+               
                 let allMatch = true;
                 for (let i = 0; i < thesisCheck.member.length; i++) {
                     if (thesisCheck.member[i].name !== member[i].name) {
@@ -258,6 +261,8 @@ export const addSequence = (thesisId, member) =>{
                         break; 
                     }
                 }
+                let n_member= thesisCheck.member.length;
+        
                 if(allMatch) {
                     const newSequence = await Register.create({
                         idThesis: thesisId,
@@ -274,7 +279,6 @@ export const addSequence = (thesisId, member) =>{
                 pdfData.status = 400;
                 resolve(pdfData)
             }else{
-
                 const newSequence = await Register.create({
                    idThesis: thesisId,
                    member: member,
