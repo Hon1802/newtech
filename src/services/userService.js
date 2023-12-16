@@ -244,10 +244,7 @@ export const getByUserId = (userId) =>{
 };
 //update by id
 export const updateById = (userId, 
-                            idUser,
                             fullName, 
-                            dob, 
-                            email,
                             phone,
                             major,
                             stClass,
@@ -259,10 +256,7 @@ export const updateById = (userId,
             const user = await User.updateOne(
                 { _id: userId }, // Filter: Find the user with the given id
                 { $set: { 
-                    idUser: idUser,
                     name : fullName,
-                    dob: dob, 
-                    email: email,
                     phoneNumber: phone,
                     major: major,
                     stClass: stClass,

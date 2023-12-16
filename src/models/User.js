@@ -68,7 +68,7 @@ export default mongoose.model('User',
         status:{
             type:String,
             required:true        
-        },
+        }     
     },{
         autoCreate: false,
         autoIndex: true

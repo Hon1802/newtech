@@ -7,7 +7,8 @@ import {
     handleGetAllThesisNotCompleted,
     getThesisById,
     addMember,
-    addSequence
+    addSequence,
+    checkUserThesis
 } from "../../services/thesisService.js"
 import {
     handleAddReference,
@@ -202,38 +203,58 @@ export const registerThesis = async(req, res) =>{
         if(idThesis)
         {
             let dataThesis = await getThesisInformation(idThesis);
-            // dataThesis.data.N_member = 1;
-            if(dataThesis.data.N_member === 0)
+            let typeThesis = dataThesis.data.type;
+            if( ! await checkUserThesis(member,typeThesis))
             {
-                let thesisData = await addMember(idThesis, member);
-                return res.status(200).json({
-                    errCode: 0,
-                    message: 'Success',
+                return res.status(400).json({
+                    errCode: 1,
+                    message: 'Students who have registered for this type of thesis before, please register for another thesis ',
                 }) 
+            }
+            let checkMatch = true;
+            for (let i = 0; i < dataThesis.data.member.length; i++) {
+                if (dataThesis.data.member[i].name === member[0].name) {
+                    checkMatch = false;
+                    break; 
+                }
             } 
-            if(dataThesis.data.N_member === 1)
+            if(checkMatch)
             {
-                let thesisData = await addSequence(idThesis, member);
-                return res.status(thesisData.status).json({
-                    errCode: thesisData.errCode,
-                    message: thesisData.errMessage,
+                if(dataThesis.data.N_member === 0)
+                {
+                    let thesisData = await addMember(idThesis, member);
+                    return res.status(200).json({
+                        errCode: 0,
+                        message: 'Success',
+                    }) 
+                } 
+                if(dataThesis.data.N_member === 1)
+                {
+                    let thesisData = await addSequence(idThesis, member);
+                    return res.status(thesisData.status).json({
+                        errCode: thesisData.errCode,
+                        message: thesisData.errMessage,
+                    }) 
+                } 
+                if(dataThesis.data.N_member === 2)
+                {
+                    return res.status(200).json({
+                        errCode: 0,
+                        message: 'Out of slot, please register another topic',
+                    }) 
+                } 
+            } else {
+                return res.status(400).json({
+                    errCode: 1,
+                    message: 'Students already exist in this thesis',
                 }) 
-            } 
-            if(dataThesis.data.N_member === 2)
-            {
-                return res.status(200).json({
-                    errCode: 0,
-                    message: 'Please register another topic',
-                }) 
-            } 
+            }
         }
-       
-        
     } catch(e)
     {
         return res.status(400).json({
             errCode: 1,
-            message: 'Not found',
+            message: 'Invalid input value or input value not exist',
         }) 
     }
 }

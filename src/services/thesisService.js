@@ -228,7 +228,7 @@ export const addMember = (thesisId, member) =>{
                 const thesis = await Thesis.updateOne(
                     { _id: thesisId, "member.name": { $ne: member[0].name }}, 
                     {   
-                        $inc: { N_member: 1 },
+                        $inc: { N_member: 1},
                         $push:
                         { 
                             member: member,
@@ -251,33 +251,35 @@ export const addSequence = (thesisId, member) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let pdfData = {};
-            const thesisCheck = await Register.findOne({ idThesis: thesisId});
+            const thesisCheck = await Register.find({ idThesis: thesisId});
             if(thesisCheck){
-               
                 let allMatch = true;
-                for (let i = 0; i < thesisCheck.member.length; i++) {
-                    if (thesisCheck.member[i].name !== member[i].name) {
-                        allMatch = false;
-                        break; 
+                thesisCheck.forEach(result => {
+                    for (let i = 0; i < result.member.length; i++) {
+
+                        if (result.member[i].name === member[0].name) {
+                            allMatch = false;
+                            break; 
+                        }
                     }
-                }
-                let n_member= thesisCheck.member.length;
-        
+                });
                 if(allMatch) {
                     const newSequence = await Register.create({
                         idThesis: thesisId,
                         member: member,
-                        status: 1,
-                     })
+                        status: 1
+                    })
                     pdfData.errCode = 0;
                     pdfData.errMessage ='Awaiting approval';
                     pdfData.status = 200;
+                    console.log(pdfData);
+                    resolve(pdfData)
+                } else{
+                    pdfData.errCode = 1;
+                    pdfData.errMessage ='One time each person register for each topic';
+                    pdfData.status = 400;
                     resolve(pdfData)
                 }
-                pdfData.errCode = 1;
-                pdfData.errMessage ='One time each person for each topic';
-                pdfData.status = 400;
-                resolve(pdfData)
             }else{
                 const newSequence = await Register.create({
                    idThesis: thesisId,
@@ -296,6 +298,27 @@ export const addSequence = (thesisId, member) =>{
             pdfData.errMessage ='try again';
             pdfData.status = 400;
             resolve(pdfData)    
+        }
+    })
+};
+
+//check user 
+export const checkUserThesis = (member, typeThesis) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let pdfData = {};
+                let allMatch = true;
+                const thesisCheck = await Thesis.find({ 'member.name': member[0].name});
+                thesisCheck.forEach(result => {
+                    if(result.type === typeThesis)
+                    {
+                        allMatch = false;
+                    }
+                });
+                resolve(allMatch);
+        }catch(e){
+            let allMatch = false;  
+            resolve(allMatch)    
         }
     })
 };

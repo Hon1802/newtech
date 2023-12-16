@@ -197,10 +197,8 @@ export const getUserByUserId = async (req, res) => {
 export const updateInfoById = async (req, res) => {
     try {
         let userId = req.body.id;
-        let idUser = req.body.idStudent;
-        let email = req.body.email;
         let fullName = req.body.fullName;
-        let dob = req.body.dob;
+        // let dob = req.body.dob;
         let phone = req.body.phone;
         let major = req.body.major;
         let stClass = req.body.stClass;
@@ -208,10 +206,7 @@ export const updateInfoById = async (req, res) => {
         let gender = req.body.gender;
         let userData = await updateById(
                             userId, 
-                            idUser,
                             fullName, 
-                            dob, 
-                            email,
                             phone,
                             major,
                             stClass,
