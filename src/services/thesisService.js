@@ -539,10 +539,10 @@ export const getTaskThesis = (studentId) =>{
             let taskData = {};
             let allTasks = [];
             const thesisCheck = await Thesis.find({'member.id':studentId});
-            console.log(thesisCheck[0].tasks);
             if (thesisCheck) {
                 thesisCheck.forEach(result => {
-                    allTasks = allTasks.concat(result.tasks);
+                    // allTasks = allTasks.concat(result.tasks);
+                    allTasks = allTasks.concat(result);
                 });
                 taskData.data = allTasks;
                 taskData.errCode = 0;
