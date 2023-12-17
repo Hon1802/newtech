@@ -17,9 +17,16 @@ import {
     getReference,
     readPdf,
     getAllThesisNotCompleted,
-    registerThesis
+    registerThesis,
     } 
    from "../controllers/admins/thesisController.js" ;
+import {   
+    createTask,
+    removeTask,
+    submitTask,
+    evaluateTask
+} 
+from "../controllers/admins/lectureController.js"
 let router = express.Router();
 let initWebRoutes = (app)=>{
     router.get('/', (req,res)=>{
@@ -49,6 +56,10 @@ let initWebRoutes = (app)=>{
     router.post('/api/get-reference', getReference);
     router.post('/api/get-all-thesis', getAllThesisNotCompleted);
     router.post('/api/read-pdf', readPdf);
+    router.post('/api/create-task', createTask);
+    router.post('/api/remove-task', removeTask);
+    router.post('/api/submit-task', submitTask);
+    router.post('/api/evaluate-task', evaluateTask);
     return app.use("/", router); 
 }
 

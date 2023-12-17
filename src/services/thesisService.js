@@ -322,3 +322,177 @@ export const checkUserThesis = (member, typeThesis) =>{
         }
     })
 };
+//
+export const addTaskThesis = (thesisId, dataTask) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let taskData = {};
+            const thesisCheck = await Thesis.find({ _id: thesisId});
+            
+            if(thesisCheck){
+                const thesis = await Thesis.updateOne(
+                    { _id: thesisId}, 
+                    {   
+                        $push:
+                        { 
+                            tasks : dataTask
+                        } 
+                    }
+                  );
+                if (thesis.nModified === 0) {
+                // If no document was modified
+                    taskData.errCode = 1;
+                    taskData.errMessage = 'No document found or updated';
+                    taskData.status = 400;
+                    resolve(taskData);
+                } else {
+                // If the update was successful
+                    taskData.errCode = 0;
+                    taskData.errMessage = 'Document updated successfully';
+                    taskData.status = 200;
+                    resolve(taskData);
+                }
+            }else{
+                taskData.errCode = 1;
+                taskData.errMessage ='Check again, wrong not found thesis';
+                taskData.status = 400;
+                resolve(taskData)
+            }
+            resolve(taskData);
+        }catch(e){
+            let taskData = {};   
+            taskData.errCode = 1;
+            taskData.errMessage ='Invalid value input';
+            taskData.status = 400;
+            resolve(taskData)    
+        }
+    })
+};
+export const removeTaskThesis = (thesisId, idTask) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let taskData = {};
+            const thesisCheck = await Thesis.find({ _id: thesisId});
+            if(thesisCheck){
+                const thesis = await Thesis.updateOne(
+                    { _id: thesisId}, 
+                    {   
+                        $pull:
+                        { 
+                            tasks : {
+                                _id: idTask
+                            }
+                        } 
+                    }
+                  );
+                if (thesis.nModified === 0) {
+                // If no document was modified
+                    taskData.errCode = 1;
+                    taskData.errMessage = 'No document found or remove';
+                    taskData.status = 400;
+                    resolve(taskData);
+                } else {
+                // If the update was successful
+                    taskData.errCode = 0;
+                    taskData.errMessage = 'Document removed successfully';
+                    taskData.status = 200;
+                    resolve(taskData);
+                }
+            }else{
+                taskData.errCode = 1;
+                taskData.errMessage ='Check again, wrong not found thesis';
+                taskData.status = 400;
+                resolve(taskData)
+            }
+            resolve(taskData);
+        }catch(e){
+            let taskData = {};   
+            taskData.errCode = 1;
+            taskData.errMessage ='Invalid value input';
+            taskData.status = 400;
+            resolve(taskData)    
+        }
+    })
+};
+export const submitTaskThesis = (taskId, 
+                                dataTask, 
+                                progress, 
+                                student) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let taskData = {};
+            // trans to yyyy-mm-dd
+            // let currentDate = new Date(Date.now());
+            //     currentDate.setUTCHours(0, 0, 0, 0);
+            //     const formattedDate = currentDate.toISOString().split('T')[0];
+            //     console.log(formattedDate);
+            const thesis = await Thesis.updateOne(
+                { 'tasks._id': taskId }, 
+                { $set: 
+                    {   
+                        'tasks.$.idStudent': student[0].idUser,
+                        'tasks.$.fullName': student[0].name,
+                        'tasks.$.time': Date.now(),
+                        'tasks.$.result': dataTask,
+                        'tasks.$.progress': progress,
+                        'tasks.$.status': '0',
+                    } 
+                }
+                );
+            if (thesis.nModified === 0) {
+            // If no document was modified
+                taskData.errCode = 1;
+                taskData.errMessage = 'No document found or updated';
+                taskData.status = 400;
+                resolve(taskData);
+            } else {
+            // If the update was successful
+                taskData.errCode = 0;
+                taskData.errMessage = 'Document submit successfully';
+                taskData.status = 200;
+                resolve(taskData);
+            }
+        }catch(e){
+            let taskData = {};   
+            taskData.errCode = 1;
+            taskData.errMessage ='Invalid value input';
+            taskData.status = 400;
+            resolve(taskData)    
+        }
+    })
+};
+export const evaluateTaskThesis = (taskId, 
+                                evaluate) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let taskData = {};
+            const thesis = await Thesis.updateOne(
+                { 'tasks._id': taskId }, 
+                { $set: 
+                    {   
+                        'tasks.$.evaluate': evaluate,
+                    } 
+                }
+                );
+            if (thesis.nModified === 0) {
+            // If no document was modified
+                taskData.errCode = 1;
+                taskData.errMessage = 'No document found or evaluate';
+                taskData.status = 400;
+                resolve(taskData);
+            } else {
+            // If the update was successful
+                taskData.errCode = 0;
+                taskData.errMessage = 'Document evaluated successfully';
+                taskData.status = 200;
+                resolve(taskData);
+            }
+        }catch(e){
+            let taskData = {};   
+            taskData.errCode = 1;
+            taskData.errMessage ='Invalid value input';
+            taskData.status = 400;
+            resolve(taskData)    
+        }
+    })
+};

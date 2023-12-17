@@ -58,6 +58,17 @@ export default mongoose.model('Thesis',
     urlSave:[{ 
         type: String,
     }],
+    tasks:[{ 
+        task: String,
+        description: String,
+        idStudent: String,
+        fullName: String,
+        time: Date,
+        evaluate: String,
+        result: String,
+        progress: String,
+        status: String
+    }],
     // status: =-1 cancel, = 0 completed, = 1 register, =2 not register
     status:{
         type: Number,
