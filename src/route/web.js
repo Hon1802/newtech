@@ -24,7 +24,8 @@ import {
     createTask,
     removeTask,
     submitTask,
-    evaluateTask
+    evaluateTask,
+    getTask
 } 
 from "../controllers/admins/lectureController.js"
 let router = express.Router();
@@ -60,6 +61,7 @@ let initWebRoutes = (app)=>{
     router.post('/api/remove-task', removeTask);
     router.post('/api/submit-task', submitTask);
     router.post('/api/evaluate-task', evaluateTask);
+    router.post('/api/get-task', getTask);
     return app.use("/", router); 
 }
 

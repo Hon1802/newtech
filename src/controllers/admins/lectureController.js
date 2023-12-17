@@ -6,7 +6,8 @@ import {
     addTaskThesis,
     removeTaskThesis,
     submitTaskThesis,
-    evaluateTaskThesis
+    evaluateTaskThesis,
+    getTaskThesis
 } from "../../services/thesisService.js"
 import {
     getInformation,
@@ -128,6 +129,28 @@ export const evaluateTask = async (req,res) =>{
         }) 
     }
 }
+//add new file pdf
+export const getTask = async (req,res) =>{
+    try{
+        let idStudent= req.body.idStudent;
+
+        // // console.log(pathFile);
+        let thesisData = await getTaskThesis(idStudent); 
+        // console.log(pathFile);
+        return res.status(thesisData.status).json({
+            errCode: thesisData.errCode,
+            message: thesisData.errMessage,
+            thesisData                 
+        }) 
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
+
 
 //function for thesis
 const storage = multer.diskStorage({

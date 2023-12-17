@@ -496,3 +496,35 @@ export const evaluateTaskThesis = (taskId,
         }
     })
 };
+export const getTaskThesis = (studentId) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let taskData = {};
+            let allTasks = [];
+            const thesisCheck = await Thesis.find({'member.id':studentId});
+            console.log(thesisCheck[0].tasks);
+            if (thesisCheck) {
+                thesisCheck.forEach(result => {
+                    allTasks = allTasks.concat(result.tasks);
+                });
+                taskData.data = allTasks;
+                taskData.errCode = 0;
+                taskData.errMessage = 'Document get successfully ';
+                taskData.status = 200;
+                resolve(taskData);
+            } else {
+            // If the update was successful
+                taskData.errCode = 1;
+                taskData.errMessage = 'No document found';
+                taskData.status = 400;
+                resolve(taskData);
+            }
+        }catch(e){
+            let taskData = {};   
+            taskData.errCode = 1;
+            taskData.errMessage ='Invalid value input';
+            taskData.status = 400;
+            resolve(taskData)    
+        }
+    })
+};
