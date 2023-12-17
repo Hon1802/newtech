@@ -8,7 +8,8 @@ import {
     getThesisById,
     addMember,
     addSequence,
-    checkUserThesis
+    checkUserThesis,
+    getFileById
 } from "../../services/thesisService.js"
 import {
     handleAddReference,
@@ -267,6 +268,31 @@ export const readPdf = async(req, res) =>{
         {
             console.log(PDFData);
             let pathPDF = PDFData.data.urlSave;
+            var data =fs.readFileSync(pathPDF);
+                res.contentType("application/pdf");
+                res.send(data);
+        } else{
+            return res.status(PDFData.status).json({
+                errCode: PDFData.errCode,
+                message: PDFData.message
+            }) 
+        }
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
+// read pdf
+export const readTask = async(req, res) =>{
+    try {
+        let idFile = req.body.idFile;
+        let PDFData = await getFileById(idFile);
+        if(PDFData.errCode === 0)
+        {
+            let pathPDF = PDFData.data;
             var data =fs.readFileSync(pathPDF);
                 res.contentType("application/pdf");
                 res.send(data);

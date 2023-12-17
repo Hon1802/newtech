@@ -72,7 +72,6 @@ export const submitTask = async (req,res) =>{
                     message: "Error uploading thesis.",
                 });
             }
-           
             let pathName = req.file.filename;
             let progress = req.body.progress;
             let id = req.body.idUser;
@@ -82,12 +81,12 @@ export const submitTask = async (req,res) =>{
                 progress = 'null';
             }
             let student = await getInformation(id);
-            let pathFile = 'src/public/thesis/' + pathName;
+            let pathFile = 'src/public/tasks/' + pathName;
             // // console.log(pathFile);
             let thesisData = await submitTaskThesis(
                                 idTask, 
                                 pathFile, 
-                                progress,
+                                progress, 
                                 student); 
             // console.log(pathFile);
             return res.status(thesisData.status).json({

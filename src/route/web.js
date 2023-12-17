@@ -16,6 +16,7 @@ import {
     uploadReference,
     getReference,
     readPdf,
+    readTask,
     getAllThesisNotCompleted,
     registerThesis,
     } 
@@ -57,11 +58,13 @@ let initWebRoutes = (app)=>{
     router.post('/api/get-reference', getReference);
     router.post('/api/get-all-thesis', getAllThesisNotCompleted);
     router.post('/api/read-pdf', readPdf);
+    router.post('/api/read-task', readTask);
     router.post('/api/create-task', createTask);
     router.post('/api/remove-task', removeTask);
     router.post('/api/submit-task', submitTask);
     router.post('/api/evaluate-task', evaluateTask);
     router.post('/api/get-task', getTask);
+
     return app.use("/", router); 
 }
 

@@ -1,5 +1,6 @@
 import { Thesis, Register } from "../models/index.js"
 import { checkExist } from "./userService.js";
+import { ObjectId } from 'mongodb';
 
 // register
 export const handleAddThesis = (
@@ -218,7 +219,43 @@ export const getThesisById = (fileId) =>{
         }
     })
 };
-
+// get task result by id
+export const getFileById = (fileId) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            
+            let pdfData = {};
+            let isExist = await Thesis.findOne({'tasks._id': fileId }).exec();    
+            if(isExist)
+            {   
+                let taskGet = isExist.tasks;
+                const fileIdObj = new ObjectId(fileId);
+                taskGet.forEach(result => {
+                    if(result._id.equals(fileIdObj))
+                    {
+                        pdfData.errCode = 0;
+                        pdfData.errMessage ='Get thesis by id success';
+                        pdfData.data = result.result;
+                        pdfData.status = 200;
+                        resolve(pdfData)
+                    }
+                });
+                
+            }else{ 
+                pdfData.status = 400;
+                pdfData.errCode = 3;
+                pdfData.errMessage ='Error connect'
+                resolve(pdfData) 
+            }
+        }catch(e){
+            let pdfData = {};
+            pdfData.status = 400;
+            pdfData.errCode = 3;
+            pdfData.errMessage ='Not exist'         
+            rejects(pdfData)
+        }
+    })
+};
 // add member
 export const addMember = (thesisId, member) =>{
     return new Promise( async (resolve, rejects)=>{
