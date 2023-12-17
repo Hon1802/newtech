@@ -10,6 +10,8 @@ export default async function checkToken(req, res, next) {
         || req.url.toLowerCase().trim() =='/api/logout'.toLowerCase().trim()
         || req.url.toLowerCase().trim() == '/auth/login'.toLowerCase().trim() 
         || req.url.toLowerCase().trim() == '/api/get-reference'.toLowerCase().trim() 
+        || req.url.toLowerCase().trim() == '/api/read-pdf'.toLowerCase().trim() 
+        
     ){
         next()
         return
