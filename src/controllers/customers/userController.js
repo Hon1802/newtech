@@ -289,6 +289,7 @@ export const getInformation = async (userId) => {
                 ...userData.data
             };
             modifiedData.push({
+                id: userData.idUser || 'none',
                 idUser : userData.idUser || 'none',
                 name : userData.name || "none", 
                 class : userData.stClass || "none",
@@ -302,6 +303,7 @@ export const getInformation = async (userId) => {
     {
         let modifiedData =[];   
         modifiedData.push({
+            id: '00000000',
             idUser : '00000000',
             name : 'no name',
             class : 'no class',

@@ -203,18 +203,19 @@ export const registerThesis = async(req, res) =>{
         let idThesis = req.body.idThesis;
         let idMember = req.body.idMember || '000000';
         let member = await getInformation(idMember);
+        // console.log(member);
         if(idThesis)
         {
             let dataThesis = await getThesisInformation(idThesis);
             let typeThesis = dataThesis.data.type;
-            if( ! await checkUserThesis(member,typeThesis))
+            if( ! await checkUserThesis(member, typeThesis))
             {
                 return res.status(400).json({
                     errCode: 1,
                     message: 'Students who have registered for this type of thesis before, please register for another thesis ',
                 }) 
             }
-            let checkMatch = true;
+            let checkMatch = true; 
             for (let i = 0; i < dataThesis.data.member.length; i++) {
                 if (dataThesis.data.member[i].name === member[0].name) {
                     checkMatch = false;

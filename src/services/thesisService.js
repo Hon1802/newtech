@@ -275,7 +275,7 @@ export const addMember = (thesisId, member) =>{
                     resolve(pdfData);
                 }
             }
-            resolve(pdfData);
+            resolve(pdfData); 
         }catch(e){
             let pdfData = {};       
             rejects(pdfData)
