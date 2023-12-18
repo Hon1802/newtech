@@ -241,7 +241,7 @@ export const registerThesis = async(req, res) =>{
                 } 
                 if(dataThesis.data.N_member === 2)
                 {
-                    return res.status(200).json({
+                    return res.status(400).json({
                         errCode: 0,
                         message: 'Out of slot, please register another topic',
                     }) 
