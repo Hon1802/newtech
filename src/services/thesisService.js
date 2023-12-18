@@ -13,7 +13,7 @@ export const handleAddThesis = (
                                 time_end,
                                 instructor,
                                 type,
-                                status = 1) =>{
+                                status = 2) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let thesisData = {};
@@ -38,7 +38,7 @@ export const handleAddThesis = (
                         instructor : instructor, 
                         type : type,
                         N_member : 0,
-                        status : status
+                        status : 2,
                     })
                     thesisData.status = 200;
                     thesisData.errCode = 0;
@@ -192,7 +192,6 @@ export const handleAddThesisData = (
 export const getThesisById = (fileId) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
-            
             let pdfData = {};
             let isExist = await Thesis.findOne({_id: fileId }).exec();    
             if(isExist)
@@ -562,6 +561,70 @@ export const getTaskThesis = (studentId) =>{
             taskData.errMessage ='Invalid value input';
             taskData.status = 400;
             resolve(taskData)    
+        }
+    })
+};
+export const handleBrowseThesis = (thesisId, browse) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let taskData = {};
+            let thesisCheck = {};
+            if(browse === 'accept')
+            {
+                thesisCheck = await Thesis.updateOne(
+                    { _id: thesisId }, 
+                    { $set: { 
+                        status: 1,
+                     } } 
+                  );
+            } else{
+                thesisCheck = await Thesis.deleteOne({ _id: thesisId });
+            }
+            if (thesisCheck.nModified === 0) {
+                taskData.status = 400;
+                taskData.errCode = 4;
+                taskData.errMessage = 'Thesis deleted or not found';
+                resolve(taskData);
+            } else{
+                taskData.status = 200;
+                taskData.errCode = 0;
+                taskData.errMessage = 'Thesis done';
+                resolve(taskData);
+            }
+
+        }catch(e){
+            let taskData = {};   
+            taskData.errCode = 1;
+            taskData.errMessage ='Invalid value input';
+            taskData.status = 400;
+            resolve(taskData)    
+        }
+    })
+};
+export const handleGetBrowseThesis = () =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let pdfData = {};
+            let isExist = await Thesis.find({status: '2' }).exec();    
+            if(isExist)
+            {   
+                pdfData.errCode = 0;
+                pdfData.errMessage ='Get thesis by id success';
+                pdfData.data = isExist;
+                pdfData.status = 200;
+                resolve(pdfData)
+            }else{
+                pdfData.status = 400;
+                pdfData.errCode = 3;
+                pdfData.errMessage ='Error connect'
+                resolve(pdfData) 
+            }
+        }catch(e){
+            let pdfData = {};
+            pdfData.status = 400;
+            pdfData.errCode = 3;
+            pdfData.errMessage ='Not exist'         
+            rejects(pdfData)
         }
     })
 };

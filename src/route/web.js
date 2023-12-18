@@ -19,6 +19,8 @@ import {
     readTask,
     getAllThesisNotCompleted,
     registerThesis,
+    browseThesis,
+    getBrowseThesis
     } 
    from "../controllers/admins/thesisController.js" ;
 import {   
@@ -64,7 +66,8 @@ let initWebRoutes = (app)=>{
     router.post('/api/submit-task', submitTask);
     router.post('/api/evaluate-task', evaluateTask);
     router.post('/api/get-task', getTask);
-
+    router.post('/api/browse-thesis', browseThesis);
+    router.post('/api/get-thesis-browse', getBrowseThesis);
     return app.use("/", router); 
 }
 

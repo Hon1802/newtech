@@ -9,7 +9,9 @@ import {
     addMember,
     addSequence,
     checkUserThesis,
-    getFileById
+    getFileById,
+    handleBrowseThesis,
+    handleGetBrowseThesis
 } from "../../services/thesisService.js"
 import {
     handleAddReference,
@@ -323,7 +325,42 @@ const storage = multer.diskStorage({
     },
   });
 export const upload = multer({ storage });
-
+// browseTask
+export const browseThesis = async(req, res) =>{
+    try {
+        let idRequest = req.body.idRequest;
+        let browse = req.body.browse;
+        let dataResponse = await handleBrowseThesis(idRequest, browse);
+        return res.status(dataResponse.status).json({
+            errCode: dataResponse.errCode,
+            message: dataResponse.message,
+            dataResponse
+        }) 
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
+export const getBrowseThesis = async(req, res) =>{
+    try {
+        let dataResponse = await handleGetBrowseThesis();
+        return res.status(dataResponse.status).json({
+            errCode: dataResponse.errCode,
+            message: dataResponse.message,
+            dataResponse
+        }) 
+    } catch(e)
+    {
+        console.log(e)
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
 // add new thesis
 export const example = async(req, res) =>{
     try {

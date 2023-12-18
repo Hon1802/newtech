@@ -73,13 +73,13 @@ export const upload = async() => {
                 name, 
                 Dob,
                 email,
-                phone,
+                phone, 
                 major,
                 role,
                 stClass,
                 facility,
                 gender, 
-                urlImage,
+                urlImage, 
                 token,
                 status
                 );
