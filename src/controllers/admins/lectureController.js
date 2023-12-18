@@ -132,7 +132,6 @@ export const evaluateTask = async (req,res) =>{
 export const getTask = async (req,res) =>{
     try{
         let idStudent= req.body.idStudent;
-
         // // console.log(pathFile);
         let thesisData = await getTaskThesis(idStudent); 
         // console.log(pathFile);

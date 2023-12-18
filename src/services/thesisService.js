@@ -1,6 +1,7 @@
 import { Thesis, Register } from "../models/index.js"
 import { checkExist } from "./userService.js";
 import { ObjectId } from 'mongodb';
+import path from 'path'
 
 // register
 export const handleAddThesis = (
@@ -476,13 +477,13 @@ export const submitTaskThesis = (taskId,
                 }
                 );
             if (thesis.nModified === 0) {
-            // If no document was modified
+                // If no document was modified
                 taskData.errCode = 1;
                 taskData.errMessage = 'No document found or updated';
                 taskData.status = 400;
                 resolve(taskData);
             } else {
-            // If the update was successful
+                // If the update was successful
                 taskData.errCode = 0;
                 taskData.errMessage = 'Document submit successfully';
                 taskData.status = 200;
@@ -541,6 +542,19 @@ export const getTaskThesis = (studentId) =>{
             if (thesisCheck) {
                 thesisCheck.forEach(result => {
                     // allTasks = allTasks.concat(result.tasks);
+                    let fileTask = result.tasks;
+                    let fn = '';
+                    fileTask.forEach(nameFile=>{
+                        fn = path.basename(nameFile.result).replace(/^[^-]+-/, '').trim();
+                        try{
+                            let parts = fn.split('-');
+                            let modifiedString = parts.slice(1).join('-');
+                            nameFile.result = modifiedString;
+                        } catch(e)
+                        {
+
+                        }
+                    });
                     allTasks = allTasks.concat(result);
                 });
                 taskData.data = allTasks;
