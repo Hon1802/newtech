@@ -20,7 +20,9 @@ import {
     getAllThesisNotCompleted,
     registerThesis,
     browseThesis,
-    getBrowseThesis
+    getBrowseThesis,
+    getRegisterThesis,
+    browseRegisterThesis
     } 
    from "../controllers/admins/thesisController.js" ;
 import {   
@@ -54,6 +56,8 @@ let initWebRoutes = (app)=>{
     router.post('/api/delete-account', deleteUserById);
     // register thesis
     router.post('/api/register-thesis', registerThesis);
+    router.post('/api/get-register-thesis', getRegisterThesis);
+    router.post('/api/browse-register-thesis', browseRegisterThesis);
 // thesis
     router.post('/api/upload-thesis', handleAddNewThesis);
     router.post('/api/upload-reference', uploadReference);

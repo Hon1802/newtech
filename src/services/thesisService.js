@@ -260,7 +260,7 @@ export const getFileById = (fileId) =>{
 export const addMember = (thesisId, member) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
-            let pdfData = {};
+            let pdfData = 0;
             {
                 const thesis = await Thesis.updateOne(
                     { _id: thesisId, "member.name": { $ne: member[0].name }}, 
@@ -272,9 +272,9 @@ export const addMember = (thesisId, member) =>{
                         } }
                   );
                 if (thesis.nModified === 0) {
-                // If no user was modified, it means the user with the given id was not found
                     resolve(pdfData);
                 }
+                pdfData = 1;
             }
             resolve(pdfData); 
         }catch(e){
@@ -631,6 +631,76 @@ export const handleGetBrowseThesis = () =>{
                 pdfData.status = 400;
                 pdfData.errCode = 3;
                 pdfData.errMessage ='Error connect'
+                resolve(pdfData) 
+            }
+        }catch(e){
+            let pdfData = {};
+            pdfData.status = 400;
+            pdfData.errCode = 3;
+            pdfData.errMessage ='Not exist'         
+            rejects(pdfData)
+        }
+    })
+};
+export const handleGetRegisterThesis = (idThesis) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let pdfData = {};
+            let isExist = await Register.find({idThesis: idThesis}).exec();    
+            if(isExist)
+            {   
+                pdfData.errCode = 0;
+                pdfData.errMessage ='Get thesis by id success';
+                pdfData.data = isExist;
+                pdfData.status = 200;
+                resolve(pdfData)
+            }else{
+                pdfData.status = 400;
+                pdfData.errCode = 3;
+                pdfData.errMessage ='Error connect'
+                resolve(pdfData) 
+            }
+        }catch(e){
+            let pdfData = {};
+            pdfData.status = 400;
+            pdfData.errCode = 3;
+            pdfData.errMessage ='Not exist'         
+            rejects(pdfData)
+        }
+    })
+};
+export const handleBrowseRegisterThesis = (idThesis, browse) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let pdfData = {};
+            let isExist = await Register.findOne({_id: idThesis}).exec();    
+            if(isExist && browse ==="accept")
+            {   
+                let member = isExist.member;
+                let idTh = isExist.idThesis;
+
+                let addN = await addMember (idTh, member);
+                if(addN === '1')
+                {
+                    pdfData.errCode = 1;
+                    pdfData.errMessage ='Error invalid input';
+                    pdfData.data = isExist;
+                    pdfData.status = 400;
+                    resolve(pdfData)
+                } else {
+                    let deleteRe = await Register.deleteOne({_id: idThesis});
+                    pdfData.errCode = 0;
+                    pdfData.errMessage ='Success';
+                    pdfData.data = isExist;
+                    pdfData.status = 200;
+                    resolve(pdfData)
+                    
+                }
+            }else{
+                let deleteRe = await Register.deleteOne({_id: idThesis});
+                pdfData.status = 200;
+                pdfData.errCode = 3;
+                pdfData.errMessage ='Cancel success'
                 resolve(pdfData) 
             }
         }catch(e){

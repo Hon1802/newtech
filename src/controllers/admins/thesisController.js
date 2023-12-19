@@ -11,7 +11,9 @@ import {
     checkUserThesis,
     getFileById,
     handleBrowseThesis,
-    handleGetBrowseThesis
+    handleGetBrowseThesis,
+    handleGetRegisterThesis,
+    handleBrowseRegisterThesis
 } from "../../services/thesisService.js"
 import {
     handleAddReference,
@@ -348,6 +350,43 @@ export const browseThesis = async(req, res) =>{
 export const getBrowseThesis = async(req, res) =>{
     try {
         let dataResponse = await handleGetBrowseThesis();
+        return res.status(dataResponse.status).json({
+            errCode: dataResponse.errCode,
+            message: dataResponse.message,
+            dataResponse
+        }) 
+    } catch(e)
+    {
+        console.log(e)
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
+export const getRegisterThesis = async(req, res) =>{
+    try {
+        let idThesis = req.body.idThesis;
+        let dataResponse = await handleGetRegisterThesis(idThesis);
+        return res.status(dataResponse.status).json({
+            errCode: dataResponse.errCode,
+            message: dataResponse.message,
+            dataResponse
+        }) 
+    } catch(e)
+    {
+        console.log(e)
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
+export const browseRegisterThesis = async(req, res) =>{
+    try {
+        let idThesis = req.body.idRegister;
+        let browse =req.body.browse;
+        let dataResponse = await handleBrowseRegisterThesis(idThesis, browse);
         return res.status(dataResponse.status).json({
             errCode: dataResponse.errCode,
             message: dataResponse.message,
