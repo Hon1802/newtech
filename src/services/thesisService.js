@@ -95,6 +95,23 @@ export const handleGetAllThesisNotCompleted = (title,
                 return (thesis.status == status);
             });  
             const combinedResult = thesisResult;
+            combinedResult.forEach(item=>{
+                // console.log(item.tasks)
+                let fileTask = item.tasks;
+                let fn = '';
+                fileTask.forEach(nameFile=>{
+                    console.log(nameFile.result)
+                    fn = path.basename(nameFile.result).replace(/^[^-]+-/, '').trim();
+                    try{
+                        let parts = fn.split('-');
+                        let modifiedString = parts.slice(1).join('-');
+                        nameFile.result = modifiedString;
+                    } catch(e)
+                    {
+
+                    }
+                });
+            });
             if(combinedResult)
             {   
                 referenceData.status = 200;
@@ -534,6 +551,51 @@ export const evaluateTaskThesis = (taskId,
     })
 };
 export const getTaskThesis = (studentId) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let taskData = {};
+            let allTasks = [];
+            const thesisCheck = await Thesis.find({'member.id':studentId});
+            if (thesisCheck) {
+                thesisCheck.forEach(result => {
+                    // allTasks = allTasks.concat(result.tasks);
+                    let fileTask = result.tasks;
+                    let fn = '';
+                    fileTask.forEach(nameFile=>{
+                        fn = path.basename(nameFile.result).replace(/^[^-]+-/, '').trim();
+                        try{
+                            let parts = fn.split('-');
+                            let modifiedString = parts.slice(1).join('-');
+                            nameFile.result = modifiedString;
+                        } catch(e)
+                        {
+
+                        }
+                    });
+                    allTasks = allTasks.concat(result);
+                });
+                taskData.data = allTasks;
+                taskData.errCode = 0;
+                taskData.errMessage = 'Document get successfully ';
+                taskData.status = 200;
+                resolve(taskData);
+            } else {
+            // If the update was successful
+                taskData.errCode = 1;
+                taskData.errMessage = 'No document found';
+                taskData.status = 400;
+                resolve(taskData);
+            }
+        }catch(e){
+            let taskData = {};   
+            taskData.errCode = 1;
+            taskData.errMessage ='Invalid value input';
+            taskData.status = 400;
+            resolve(taskData)    
+        }
+    })
+};
+export const handleGetAllThesis = (studentId) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let taskData = {};

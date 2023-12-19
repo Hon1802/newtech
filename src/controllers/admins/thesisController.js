@@ -10,10 +10,12 @@ import {
     addSequence,
     checkUserThesis,
     getFileById,
+    handleGetAllThesis,
     handleBrowseThesis,
     handleGetBrowseThesis,
     handleGetRegisterThesis,
-    handleBrowseRegisterThesis
+    handleBrowseRegisterThesis,
+    
 } from "../../services/thesisService.js"
 import {
     handleAddReference,
@@ -46,9 +48,9 @@ export const getAllThesisNotCompleted = async(req, res) =>{
                                                         academic_year,
                                                         type,
                                                         status);
+                                                        
         let tempImagePaths = 'src/public/default/pdf.png';
         referenceData.image = fs.readFileSync(tempImagePaths, {encoding: 'base64'});
-        
         return res.status(referenceData.status).json({
             errCode: referenceData.errCode,
             message: referenceData.message,
@@ -350,6 +352,23 @@ export const browseThesis = async(req, res) =>{
 export const getBrowseThesis = async(req, res) =>{
     try {
         let dataResponse = await handleGetBrowseThesis();
+        return res.status(dataResponse.status).json({
+            errCode: dataResponse.errCode,
+            message: dataResponse.message,
+            dataResponse
+        }) 
+    } catch(e)
+    {
+        console.log(e)
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
+export const getAllThesis = async(req, res) =>{
+    try {
+        let dataResponse = await handleGetAllThesis();
         return res.status(dataResponse.status).json({
             errCode: dataResponse.errCode,
             message: dataResponse.message,
