@@ -355,7 +355,56 @@ export const addSequence = (thesisId, member) =>{
         }
     })
 };
-
+//
+export const handelCancelThesis = (thesisId, idUser) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let taskData = {};
+            const thesisCheck = await Thesis.findOne({ _id: thesisId, 'member.id': idUser});
+            console.log(thesisCheck)
+            if(thesisCheck){
+                const thesis = await Thesis.updateOne(
+                    { _id: thesisId}, 
+                    {   
+                        $pull:
+                        { 
+                            member : {
+                                id: idUser
+                            }
+                        },
+                        $inc: { N_member: -1}
+                    }
+                  );
+                if (thesis.nModified === 0) {
+                // If no document was modified
+                    taskData.errCode = 1;
+                    taskData.errMessage = 'No student found or remove';
+                    taskData.status = 400;
+                    resolve(taskData);
+                } else {
+                // If the update was successful
+                    taskData.errCode = 0;
+                    taskData.errMessage = 'Student removed successfully';
+                    taskData.status = 200;
+                    resolve(taskData);
+                }
+            }else{
+                let pdfData = {};
+                pdfData.errCode = 1;
+                pdfData.errMessage ='No student map';
+                pdfData.status = 400;
+                resolve(pdfData)
+            }
+            resolve(pdfData);
+        }catch(e){
+            let pdfData = {};   
+            pdfData.errCode = 1; 
+            pdfData.errMessage ='try again';
+            pdfData.status = 400;
+            resolve(pdfData)    
+        }
+    })
+};
 //check user 
 export const checkUserThesis = (member, typeThesis) =>{
     return new Promise( async (resolve, rejects)=>{

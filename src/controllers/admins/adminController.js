@@ -1,4 +1,13 @@
 import { MAJOR } from "../../global/constants.js";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path';
+import fs from 'fs'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+import multer from "multer";
+import validator from 'validator';
 import {
     handleAddAccount,
     checkExist,
@@ -104,3 +113,44 @@ export const deleteAccount = async(req, res) =>{
         }) 
     }
 }
+export const addAnnouncementAccount = async(req, res) =>{
+    try{
+        upload.single('image')(req, res, async function (err) {
+            if (err) {
+                return res.status(400).json({
+                    errCode: 400,
+                    message: "Error uploading image.",
+                });
+            }
+           
+            let pathName = req.file.filename;
+            let userId = req.body.id;
+            let pathFile = 'src/public/imageUser/' + pathName;
+            let userData = await uploadAvatar(pathFile, userId);
+
+            return res.status(userData.status).json({
+                errCode: userData.errCode,
+                message: userData.errMessage,
+                userData
+            }) 
+        }); 
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    } 
+}
+//function for images
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, './src/public/announcement');
+    },
+    filename: (req, file, cb) => {
+    //   cb(null, file.originalname);
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
+    cb(null, `${uniqueSuffix}-${file.originalname}`);
+    },
+  });
+export const upload = multer({ storage });

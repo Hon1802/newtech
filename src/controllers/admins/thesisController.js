@@ -3,18 +3,19 @@ import { dirname } from 'path';
 import path from 'path';
 import fs from 'fs'
 import {
-    handleAddThesis,
-    handleGetAllThesisNotCompleted,
-    getThesisById,
     addMember,
     addSequence,
-    checkUserThesis,
     getFileById,
+    getThesisById,
+    checkUserThesis,
+    handleAddThesis,
     handleGetAllThesis,
     handleBrowseThesis,
+    handelCancelThesis,
     handleGetBrowseThesis,
     handleGetRegisterThesis,
     handleBrowseRegisterThesis,
+    handleGetAllThesisNotCompleted,
     
 } from "../../services/thesisService.js"
 import {
@@ -164,6 +165,25 @@ export const uploadReference = async (req,res) =>{
                 thesisData                 
             }) 
         }); 
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
+//add new file pdf
+export const cancelRegisterThesis = async (req,res) =>{
+    try{
+        let idThesis = req.body.idThesis;
+        let idUser = req.body.idUser;
+        let thesisData = await handelCancelThesis(idThesis, idUser);
+        return res.status(thesisData.status).json({
+            errCode: thesisData.errCode,
+            message: thesisData.errMessage,
+            thesisData                 
+        }) 
     } catch(e)
     {
         return res.status(400).json({

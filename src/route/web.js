@@ -22,7 +22,8 @@ import {
     browseThesis,
     getBrowseThesis,
     getRegisterThesis,
-    browseRegisterThesis
+    browseRegisterThesis,
+    cancelRegisterThesis
     } 
    from "../controllers/admins/thesisController.js" ;
 import {   
@@ -37,7 +38,8 @@ import {
     getMajor,   
     addAccount,
     getAllUser,
-    deleteAccount
+    deleteAccount,
+    addAnnouncementAccount
 } from '../controllers/admins/adminController.js'
 let router = express.Router();
 let initWebRoutes = (app)=>{
@@ -78,11 +80,13 @@ let initWebRoutes = (app)=>{
     router.post('/api/get-task', getTask);
     router.post('/api/browse-thesis', browseThesis);
     router.post('/api/get-thesis-browse', getBrowseThesis);
+    router.post('/api/cancel-register-thesis', cancelRegisterThesis);
     //admin
     router.get('/api/admin/get-major', getMajor);
     router.get('/api/admin/get-all-user', getAllUser);
     router.post('/api/admin/add-account', addAccount);
     router.post('/api/admin/delete-account', deleteAccount);
+    router.post('/api/admin/add-announcement-account', addAnnouncementAccount);
     return app.use("/", router); 
 }
 
