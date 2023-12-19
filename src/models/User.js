@@ -35,7 +35,7 @@ export default mongoose.model('User',
             required:true,
             validate:{
                 validator:(phoneNumber) => phoneNumber.length>5,
-                message:'Email is incorrect format'
+                message:'Phone is incorrect format'
             }        
         },
         major:{

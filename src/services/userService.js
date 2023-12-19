@@ -80,6 +80,61 @@ export const handleUserLogOut = (userId) =>{
     })
 };
 // register
+export const handleAddAccount = (
+                                idUser,
+                                fullName, 
+                                email,
+                                major,
+                                role) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let userData = {};
+            let isExist = await User.findOne({email}).exec();            
+            if(isExist)
+            {   
+                userData.status = 400;
+                userData.errCode = 3;
+                userData.errMessage = 'Email exists';
+                resolve(userData)
+
+            }else{
+                try {
+                    const newUser = await User.create({
+                        idUser: idUser,
+                        name:fullName, 
+                        email: email,
+                        phoneNumber: '00000000',
+                        major: major,
+                        role: role,
+                        token: 'expired',
+                        status : '1'
+                    })
+                    userData.status = 200;
+                    userData.errCode = 0;
+                    userData.errMessage ='Your account was create';
+                    userData.data = {
+                        ...newUser._doc,
+                        password: 'Not show'
+                    }
+                    console.log('success')
+                    resolve(userData)
+                } catch(e){
+                    
+                    userData.status = 400;
+                    userData.errCode = 4;
+                    userData.errMessage = 'Unprocessable Entity'  ;
+                    resolve(userData)
+                }  
+            }
+        }catch(e){
+            let userData = {};
+            userData.status = 400;
+            userData.errCode = 3;
+            userData.errMessage ='Your account was not created'             
+            resolve(userData)
+        }
+    })
+};
 export const handleAddUser = (
                                 idUser,
                                 fullName, 
@@ -148,6 +203,35 @@ export const handleAddUser = (
         }
     })
 };
+// Delete account
+export const handleDeleteAccount = (idAccount) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let userData = {};
+            let isExist = await User.findOne({_id: idAccount}).exec();            
+            if(isExist)
+            {   
+                let del = await User.deleteOne({_id: idAccount}).exec();
+                userData.status = 200;
+                userData.errCode = 0;
+                userData.errMessage = 'Deleted success';
+                resolve(userData)
+
+            }else{
+                userData.status = 400;
+                userData.errCode = 4;
+                userData.errMessage = 'Account not exist'  ;
+                resolve(userData)
+            }
+        }catch(e){
+            let userData = {};
+            userData.status = 400;
+            userData.errCode = 3;
+            userData.errMessage ='Your account was not created'             
+            resolve(userData)
+        }
+    })
+};
 //upload avatar to mongo
 export const uploadAvatar = (path, idUser) =>{
     return new Promise( async (resolve, rejects)=>{
@@ -193,6 +277,35 @@ export const getById = (userId) =>{
                     ...isExist.toObject(),
                     password:'Not show'    
                 };
+                userData.status = 200;
+                resolve(userData)
+            }else{
+                userData.status = 400;
+                userData.errCode = 3;
+                userData.errMessage ='Error connect'
+                resolve(userData) 
+            }
+        }catch(e){
+            let userData = {};
+            userData.status = 400;
+            userData.errCode = 3;
+            userData.errMessage ='Your account was not created'         
+            rejects(userData)
+        }
+    })
+};
+//get by id
+export const handleGetAllUser = () =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            
+            let userData = {};
+            let isExist = await User.find().exec()        
+            if(isExist)
+            {   
+                userData.errCode = 2;
+                userData.errMessage ='Get user success';
+                userData.data = isExist;
                 userData.status = 200;
                 resolve(userData)
             }else{

@@ -33,6 +33,12 @@ import {
     getTask
 } 
 from "../controllers/admins/lectureController.js"
+import {
+    getMajor,   
+    addAccount,
+    getAllUser,
+    deleteAccount
+} from '../controllers/admins/adminController.js'
 let router = express.Router();
 let initWebRoutes = (app)=>{
     router.get('/', (req,res)=>{
@@ -72,6 +78,11 @@ let initWebRoutes = (app)=>{
     router.post('/api/get-task', getTask);
     router.post('/api/browse-thesis', browseThesis);
     router.post('/api/get-thesis-browse', getBrowseThesis);
+    //admin
+    router.get('/api/admin/get-major', getMajor);
+    router.get('/api/admin/get-all-user', getAllUser);
+    router.post('/api/admin/add-account', addAccount);
+    router.post('/api/admin/delete-account', deleteAccount);
     return app.use("/", router); 
 }
 
