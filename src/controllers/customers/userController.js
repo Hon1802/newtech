@@ -200,10 +200,15 @@ export const updateInfoById = async (req, res) => {
         let fullName = req.body.fullName;
         // let dob = req.body.dob;
         let phone = req.body.phone;
+        if(!phone)
+        {
+            phone = '00000000'
+        }
         let major = req.body.major;
         let stClass = req.body.stClass;
         let facility = req.body.facility;
         let gender = req.body.gender;
+        let role = req.body.role;
         let userData = await updateById(
                             userId, 
                             fullName, 
@@ -211,6 +216,7 @@ export const updateInfoById = async (req, res) => {
                             major,
                             stClass,
                             facility,
+                            role,
                             gender);
         return res.status(userData.status).json({
             errCode: userData.errCode,

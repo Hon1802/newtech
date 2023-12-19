@@ -12,7 +12,9 @@ import {
     handleAddAccount,
     checkExist,
     handleGetAllUser,
-    handleDeleteAccount
+    handleDeleteAccount,
+    handleGetAnnouncement,
+    handleUploadAnnouncement
 } from '../../services/userService.js'
 export const getMajor = async(req, res) =>{
     try {
@@ -54,8 +56,9 @@ export const addAccount = async(req, res) =>{
         let idUser = req.body.idUser;
         let email = req.body.email;
         let role = req.body.role;
+        let gender = req.body.gender;
         let major = req.body.major;
-        if(!fullName|| !idUser || !email || !role || !major)
+        if(!fullName|| !idUser || !email || !role || !major || !gender)
         {
             return res.status(400).json({
                 errCode: 1,
@@ -73,6 +76,7 @@ export const addAccount = async(req, res) =>{
                                                 fullName, 
                                                 email, 
                                                 major,
+                                                gender,
                                                 role)
             
             return res.status(userData.status).json({
@@ -124,9 +128,16 @@ export const addAnnouncementAccount = async(req, res) =>{
             }
            
             let pathName = req.file.filename;
-            let userId = req.body.id;
-            let pathFile = 'src/public/imageUser/' + pathName;
-            let userData = await uploadAvatar(pathFile, userId);
+            let author = req.body.author;
+            let description = req.body.description;
+            let title = req.body.title;
+            let pathFile = 'src/public/announcement/' + pathName;
+            let userData = await handleUploadAnnouncement(
+                                                        title,       
+                                                        description,
+                                                        author,
+                                                        pathFile, 
+                                                        );
 
             return res.status(userData.status).json({
                 errCode: userData.errCode,
@@ -141,6 +152,38 @@ export const addAnnouncementAccount = async(req, res) =>{
             message: 'Not found',
         }) 
     } 
+}
+export const getAnnouncement = async(req, res) =>{
+    try {
+        let userData = await handleGetAnnouncement();
+        try {
+            let dataDo = userData.data;
+            dataDo.forEach(item => {
+                let pathImage = item.imageUrl;
+                if(pathImage)
+                {
+                    item.imageUrl = fs.readFileSync(pathImage, {encoding: 'base64'});
+                }
+            });
+        }catch{
+            return res.status(400).json({
+                errCode: 1,
+                message: 'Error when send',
+            }) 
+        }
+        return res.status(200).json({
+            errCode: 0,
+            message: 'Success',
+            data: userData
+        }) 
+    } catch(e)
+    {
+        console.log(e)
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
 }
 //function for images
 const storage = multer.diskStorage({

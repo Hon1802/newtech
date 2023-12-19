@@ -39,7 +39,8 @@ import {
     addAccount,
     getAllUser,
     deleteAccount,
-    addAnnouncementAccount
+    addAnnouncementAccount,
+    getAnnouncement
 } from '../controllers/admins/adminController.js'
 let router = express.Router();
 let initWebRoutes = (app)=>{
@@ -56,7 +57,7 @@ let initWebRoutes = (app)=>{
     router.post('/api/logout', handleLogOut);
     // 
     router.post('/api/upload-avatar', updateAvatar);
-    router.post('/api/update-by-id', updateInfoById);
+    
     // by id in db
     router.post('/api/personal', getUserById);
     // by id user, "20110000"
@@ -87,6 +88,8 @@ let initWebRoutes = (app)=>{
     router.post('/api/admin/add-account', addAccount);
     router.post('/api/admin/delete-account', deleteAccount);
     router.post('/api/admin/add-announcement-account', addAnnouncementAccount);
+    router.post('/api/admin/get-announcement-account', getAnnouncement);
+    router.post('/api/admin/update-by-id', updateInfoById);
     return app.use("/", router); 
 }
 

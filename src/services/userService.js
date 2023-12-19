@@ -1,5 +1,5 @@
 import { resolve } from "path";
-import { User } from "../models/index.js"
+import { User, Announcement } from "../models/index.js"
 import { rejects } from "assert";
 import jwt from "jsonwebtoken";
 import bcrypt from 'bcrypt';
@@ -85,6 +85,7 @@ export const handleAddAccount = (
                                 fullName, 
                                 email,
                                 major,
+                                gender,
                                 role) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
@@ -105,6 +106,7 @@ export const handleAddAccount = (
                         email: email,
                         phoneNumber: '00000000',
                         major: major,
+                        gender: gender,
                         role: role,
                         token: 'expired',
                         status : '1'
@@ -362,6 +364,7 @@ export const updateById = (userId,
                             major,
                             stClass,
                             facility,
+                            role,
                             gender ) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
@@ -374,6 +377,7 @@ export const updateById = (userId,
                     major: major,
                     stClass: stClass,
                     facility: facility,
+                    role: role,
                     gender: gender
                  } } // Update: Set the urlAvatar field to the new path
               );
@@ -517,6 +521,67 @@ export const checkTokenExist = (token) =>{
         }catch(e){    
             checks = 0;          
             rejects(checks)
+        }
+    })
+};
+// register
+export const handleUploadAnnouncement = (
+                                title,
+                                description, 
+                                author,
+                                imageUrl) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let userData = {};
+            const newAnnounce = await Announcement.create({
+                title: title,
+                description: description,
+                author: author,
+                time: Date.now(),
+                imageUrl: imageUrl
+            })
+            userData.status = 200;
+            userData.errCode = 0;
+            userData.errMessage ='Your announcement was create';
+            userData.data = {
+                ...newAnnounce._doc
+            }
+            console.log('success')
+            resolve(userData)
+        }catch(e){
+            let userData = {};
+            userData.status = 400;
+            userData.errCode = 3;
+            userData.errMessage ='Your announcement was not created'             
+            resolve(userData)
+        }
+    })
+};
+export const handleGetAnnouncement = () =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            
+            let userData = {};
+            let isExist = await Announcement.find().sort({ time: -1 }).limit(5);       
+            if(isExist)
+            {   
+                userData.errCode = 0;
+                userData.errMessage ='Get user by id success';
+                userData.data =isExist;
+                userData.status = 200;
+                resolve(userData)
+            }else{
+                userData.status = 400;
+                userData.errCode = 3;
+                userData.errMessage ='Error connect'
+                resolve(userData) 
+            }
+        }catch(e){
+            let userData = {};
+            userData.status = 400;
+            userData.errCode = 3;
+            userData.errMessage ='No announcement can get'         
+            rejects(userData)
         }
     })
 };
