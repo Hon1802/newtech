@@ -16,6 +16,10 @@ import {
     handleGetAnnouncement,
     handleUploadAnnouncement
 } from '../../services/userService.js'
+import {
+    handleDeleteThesis,
+    handleUpdateThesisById
+} from '../../services/thesisService.js'
 export const getMajor = async(req, res) =>{
     try {
         return res.status(200).json({
@@ -185,6 +189,56 @@ export const getAnnouncement = async(req, res) =>{
         }) 
     }
 }
+// update information by id
+export const updateThesisById = async (req, res) => {
+    try {
+        let thesisId = req.body.id;
+        let title = req.body.title;
+        let description = req.body.description;
+        // let dob = req.body.dob;
+        let userData = await handleUpdateThesisById(
+                           thesisId,
+                           title, 
+                           description);
+        return res.status(userData.status).json({
+            errCode: userData.errCode,
+            message: userData.message,
+            userData
+        }) 
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
+export const removeThesisById = async(req, res) =>{
+    try {
+        let idThesis = req.body.id;
+        if(!idThesis)
+        {
+            return res.status(400).json({
+                errCode: 1,
+                message: 'Invalid input, check again'
+            }) 
+        }
+        let userData = await handleDeleteThesis(idThesis);
+        
+        return res.status(userData.status).json({
+            errCode: userData.errCode,
+            message: userData.errMessage
+        }) 
+        
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
+
 //function for images
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {

@@ -2,28 +2,28 @@ import express from "express";
 //import controllers
 import {    getHomePage    } from "../controllers/homeController.js";
 import { 
-         handleLogOut,
-         updateAvatar,
-         getUserById,
-         getUserByUserId,
-         updateInfoById,
-         deleteUserById,
-         blackHandleGGLogin
+        getUserById,
+        updateAvatar,
+        handleLogOut,
+        updateInfoById,
+        deleteUserById,
+        getUserByUserId,
+        blackHandleGGLogin
         } 
     from "../controllers/customers/userController.js" ;
 import { 
-    handleAddNewThesis,
-    uploadReference,
-    getReference,
     readPdf,
     readTask,
-    getAllThesisNotCompleted,
-    registerThesis,
     browseThesis,
+    getReference,
+    registerThesis,
     getBrowseThesis,
+    uploadReference,
     getRegisterThesis,
+    handleAddNewThesis,
+    cancelRegisterThesis,
     browseRegisterThesis,
-    cancelRegisterThesis
+    getAllThesisNotCompleted,
     } 
    from "../controllers/admins/thesisController.js" ;
 import {   
@@ -39,8 +39,10 @@ import {
     addAccount,
     getAllUser,
     deleteAccount,
+    getAnnouncement,
+    updateThesisById,
+    removeThesisById,
     addAnnouncementAccount,
-    getAnnouncement
 } from '../controllers/admins/adminController.js'
 let router = express.Router();
 let initWebRoutes = (app)=>{
@@ -90,6 +92,8 @@ let initWebRoutes = (app)=>{
     router.post('/api/admin/add-announcement-account', addAnnouncementAccount);
     router.post('/api/admin/get-announcement-account', getAnnouncement);
     router.post('/api/admin/update-by-id', updateInfoById);
+    router.post('/api/admin/update-thesis-by-id', updateThesisById);
+    router.post('/api/admin/remove-thesis-by-id', removeThesisById);
     return app.use("/", router); 
 }
 

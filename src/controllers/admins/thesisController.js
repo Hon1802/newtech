@@ -39,10 +39,6 @@ export const getAllThesisNotCompleted = async(req, res) =>{
         let academic_year = req.body.academic_year ;
         let type = req.body.type ;     
         let status = req.body.status;   
-        if(!status)
-        {
-            status = 1;
-        }
         let referenceData = await handleGetAllThesisNotCompleted(
                                                         title,
                                                         industry,

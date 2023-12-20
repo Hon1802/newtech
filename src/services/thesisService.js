@@ -91,9 +91,13 @@ export const handleGetAllThesisNotCompleted = (title,
             let resultThesis = await queryThesis.exec();
             let resultsThesisArray = Array.isArray(resultThesis) ? resultThesis : [resultThesis];
             let transformedResultsThe = resultsThesisArray.map(item => item.toObject());
-            let thesisResult = transformedResultsThe.filter(thesis => {
-                return (thesis.status == status);
-            });  
+            let thesisResult = transformedResultsThe;
+            if(status)
+            {
+                thesisResult = transformedResultsThe.filter(thesis => {
+                    return (thesis.status == status);
+                });  
+            } 
             const combinedResult = thesisResult;
             combinedResult.forEach(item=>{
                 // console.log(item.tasks)
@@ -820,6 +824,79 @@ export const handleBrowseRegisterThesis = (idThesis, browse) =>{
             pdfData.errCode = 3;
             pdfData.errMessage ='Not exist'         
             rejects(pdfData)
+        }
+    })
+};
+
+export const handleUpdateThesisById = (
+                                    thesisId,
+                                    title, 
+                                    description) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let userData = {};
+            let isExit = await Thesis.findOne({_id:thesisId}).exec();
+            if(isExit)
+            {
+                const thesis = await Thesis.updateOne(
+                    { _id: thesisId }, // Filter: Find the user with the given id
+                    { $set: { 
+                        title : title,
+                        description: description
+                     } } 
+                  );
+                if (thesis.nModified === 0) {
+                // If no user was modified, it means the user with the given id was not found
+                    userData.status = 400;
+                    userData.errCode = 4;
+                    userData.errMessage = 'Thesis not found';
+                    resolve(userData);
+                }
+                userData.status = 200;
+                userData.errCode = 0; // Assuming 0 means success
+                userData.errMessage = 'Uploaded successfully';
+                resolve(userData);
+            } else{
+                userData.status = 400;
+                userData.errCode = 0; // Assuming 0 means success
+                userData.errMessage = 'Your Thesis was not created !!!';
+                resolve(userData);
+            }
+        }catch(e){
+            let userData = {};
+            userData.status = 400;
+            userData.errCode = 3;
+            userData.errMessage ='Your Thesis was not created'             
+            resolve(userData)
+        }
+        })
+};
+// Delete account
+export const handleDeleteThesis = (idThesis) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let userData = {};
+            let isExist = await Thesis.findOne({_id: idThesis}).exec();            
+            if(isExist)
+            {   
+                let del = await Thesis.deleteOne({_id: idThesis}).exec();
+                userData.status = 200;
+                userData.errCode = 0;
+                userData.errMessage = 'Deleted success';
+                resolve(userData)
+
+            }else{
+                userData.status = 400;
+                userData.errCode = 4;
+                userData.errMessage = 'Thesis not exist'  ;
+                resolve(userData)
+            }
+        }catch(e){
+            let userData = {};
+            userData.status = 400;
+            userData.errCode = 3;
+            userData.errMessage ='Your thesis was not created'             
+            resolve(userData)
         }
     })
 };
