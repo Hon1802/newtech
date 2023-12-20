@@ -13,6 +13,7 @@ export default async function checkToken(req, res, next) {
         || req.url.toLowerCase().trim() == '/api/read-pdf'.toLowerCase().trim() 
         || req.url.toLowerCase().trim() == '/api/read-task'.toLowerCase().trim() 
         || req.url.toLowerCase().trim() == '/api/admin/get-announcement-account '.toLowerCase().trim() 
+        || req.url.toLowerCase().trim() == '/api/admin/get-announcement-by-id'.toLowerCase().trim() 
     ){
         next()
         return

@@ -42,6 +42,7 @@ import {
     getAnnouncement,
     updateThesisById,
     removeThesisById,
+    getAnnouncementById,
     addAnnouncementAccount,
 } from '../controllers/admins/adminController.js'
 let router = express.Router();
@@ -91,6 +92,7 @@ let initWebRoutes = (app)=>{
     router.post('/api/admin/delete-account', deleteAccount);
     router.post('/api/admin/add-announcement-account', addAnnouncementAccount);
     router.post('/api/admin/get-announcement-account', getAnnouncement);
+    router.post('/api/admin/get-announcement-by-id', getAnnouncementById);
     router.post('/api/admin/update-by-id', updateInfoById);
     router.post('/api/admin/update-thesis-by-id', updateThesisById);
     router.post('/api/admin/remove-thesis-by-id', removeThesisById);

@@ -585,3 +585,33 @@ export const handleGetAnnouncement = () =>{
         }
     })
 };
+export const handleGetAnnouncementById = (id) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            
+            let userData = {};
+            let isExist = await Announcement.findOne({_id: id}).exec();       
+            if(isExist)
+            {   
+                userData.errCode = 0;
+                userData.errMessage ='Get user by id success';
+                userData.data ={
+                    ...isExist.toObject()
+                };
+                userData.status = 200;
+                resolve(userData)
+            }else{
+                userData.status = 400;
+                userData.errCode = 3;
+                userData.errMessage ='Error connect'
+                resolve(userData) 
+            }
+        }catch(e){
+            let userData = {};
+            userData.status = 400;
+            userData.errCode = 3;
+            userData.errMessage ='No announcement can get'         
+            rejects(userData)
+        }
+    })
+};

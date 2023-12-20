@@ -9,12 +9,13 @@ const __dirname = dirname(__filename);
 import multer from "multer";
 import validator from 'validator';
 import {
-    handleAddAccount,
     checkExist,
+    handleAddAccount,
     handleGetAllUser,
     handleDeleteAccount,
     handleGetAnnouncement,
-    handleUploadAnnouncement
+    handleUploadAnnouncement,
+    handleGetAnnouncementById,
 } from '../../services/userService.js'
 import {
     handleDeleteThesis,
@@ -174,6 +175,30 @@ export const getAnnouncement = async(req, res) =>{
                 errCode: 1,
                 message: 'Error when send',
             }) 
+        }
+        return res.status(200).json({
+            errCode: 0,
+            message: 'Success',
+            data: userData
+        }) 
+    } catch(e)
+    {
+        console.log(e)
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
+export const getAnnouncementById = async(req, res) =>{
+    try {
+        let id = req.body.id;
+        let userData = await handleGetAnnouncementById(id);
+        let pathImage = userData.data.imageUrl;
+        try{
+            userData.data.imageUrl = fs.readFileSync(pathImage, {encoding: 'base64'});
+        } catch{
+            userData.data.imageUrl = 'no-image';
         }
         return res.status(200).json({
             errCode: 0,
